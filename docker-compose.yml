@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  web:
+    build: .
+#    network_mode: bridge
+    networks:
+      - mynetwork
+    links:
+      - "mongo"
+    ports:
+    - "8000:8000"
+#    network_mode: host
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4.4-bionic
+#    network_mode: bridge
+    networks:
+      - mynetwork
+    environment:
+       - MONGO_INITDB_ROOT_USERNAME=fynd_admin
+       - MONGO_INITDB_ROOT_PASSWORD=fynd123
+       - MONGO_INITDB_DATABASE=fynd_db
+    ports:
+      - "27017:27017"
+
+networks:
+  mynetwork:
+#    external: true
+    driver: bridge
