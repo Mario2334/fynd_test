@@ -38,10 +38,10 @@ class SaveMovieView(HTTPMethodView):
     @validate_json(movie_schema)
     async def put(self, request, _id):
         movie = await Movie.find_one(_id)
-        doc = request.data
+        doc = request.json
         movie.clean_for_dirty(doc)
         new_movie = await Movie.update_one({"_id": movie.id}, {"$set": doc})
-        return json(parse_json(new_movie))
+        return json({"message":"Movie updated"})
 
     @scoped(ROLE["Admin"])
     async def delete(self, request, _id):
