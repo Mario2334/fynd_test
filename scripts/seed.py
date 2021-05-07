@@ -12,7 +12,7 @@ async def do_insert_and_index():
     "password":"test21",
     "role": "Admin"
     }
-    await db.user.insert_one(user_data)
+    await db.users.insert_one(user_data)
     data = json.load(open("imdb.json", "r"))
     await db.movies.insert_many(data)
     await db.movies.create_index([('name', pymongo.TEXT)], name='search_index')
