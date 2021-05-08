@@ -10,18 +10,16 @@ users = Blueprint("users", url_prefix="/users")
 
 
 class UserView(HTTPMethodView):
-    @scoped(ROLE["User"])
+    @protected()
     async def get(self, request):
         users = await User.find()
         data = [user.to_dict() for user in users.objects]
         return json({"data":data})
 
+    # Only admin can create user
     @scoped(ROLE["Admin"])
     @validate_json(user_schema)
     async def post(self, request):
-        # username = request.json.get("username", "")
-        # password = request.json.get("password", "")
-        # role = request.json.get("role", "")
         data = request.json
         is_uniq = await User.is_unique(data["username"])
         if is_uniq in (True, None):
